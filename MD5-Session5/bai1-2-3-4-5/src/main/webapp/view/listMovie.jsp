@@ -1,45 +1,46 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: LENOVO
-  Date: 2025/08/05
-  Time: 14:19
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Movie List</title>
 </head>
 <body>
 <form action="">
-    <table>
+    <table border="1">
         <thead>
         <tr>
             <th>No</th>
-            <th>id</th>
-            <th>title</th>
-            <th>director</th>
-            <th>genre</th>
-            <th>description</th>
-            <th>duration</th>
-            <th>language</th>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Director</th>
+            <th>Genre</th>
+            <th>Description</th>
+            <th>Duration</th>
+            <th>Language</th>
         </tr>
         </thead>
         <tbody>
-        <c:foreach item="${}" var="" varStatus="loop">
+        <c:forEach items="${movieList}" var="movie" varStatus="loop">
             <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>${loop.index + 1}</td>
+                <td>${movie.id}</td>
+                <td>${movie.title}</td>
+                <td>${movie.director}</td>
+                <td>${movie.genre}</td>
+                <td>${movie.description}</td>
+                <td>${movie.duration}</td>
+                <td>${movie.language}</td>
+                <td>
+                    <a href="<%=request.getContextPath()%>/MovieListServlet?action=getMovieById&id=${movie.id}">update</a>
+                </td>
+                <td><a href="<%=request.getContextPath()%>/MovieListServlet?action=deleteMovie&id=${movie.id}">delete</a>
+                </td>
             </tr>
-        </c:foreach>
+        </c:forEach>
         </tbody>
     </table>
+    <br>
+    <a href="<%=request.getContextPath()%>/view/addMovie.jsp">add Movie</a>
 </form>
 </body>
 </html>

@@ -15,6 +15,7 @@
 <form action="<%=request.getContextPath()%>/LoginServlet?action=login" method="post">
     <input type="text" placeholder="Username" id="username" name="username">
     <input type="password" placeholder="Password" id="password" name="password">
+    <button type="submit">submit</button>
 </form>
 </body>
 </html>
