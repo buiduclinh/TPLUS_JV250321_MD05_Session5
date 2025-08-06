@@ -21,7 +21,7 @@
     <label for="genre"></label>
     <input type="text" id="genre" name="genre" placeholder="${movie.genre}" value="${movie.genre}">
     <label for="description"></label>
-    <input type="text" id="description" name="description" placeholder="${movie.description} value="${movie.description}"
+    <input type="text" id="description" name="description" placeholder="${movie.description}" value="${movie.description}"
     >
     <label for="duration"></label>
     <input type="text" id="duration" name="duration" placeholder="${movie.duration}" value="${movie.duration}">

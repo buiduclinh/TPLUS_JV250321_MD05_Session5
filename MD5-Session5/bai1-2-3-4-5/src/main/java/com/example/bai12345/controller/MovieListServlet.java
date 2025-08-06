@@ -25,7 +25,7 @@ public class MovieListServlet extends HttpServlet {
     }
 
     public void getAllMovies(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Movie> movieList = new ArrayList<>();
+        List<Movie> movieList = movieDAO.getMovies();
         request.setAttribute("movieList", movieList);
         request.getRequestDispatcher("view/listMovie.jsp").forward(request, response);
     }
@@ -59,7 +59,7 @@ public class MovieListServlet extends HttpServlet {
                 request.getRequestDispatcher("view/error.jsp").forward(request, response);
             }
         } else if (action.equals("getMovieById")) {
-            int movieId = Integer.parseInt(request.getParameter("movieId"));
+            int movieId = Integer.parseInt(request.getParameter("id"));
             Movie movie = movieDAO.getMovie(movieId);
             if (movie != null) {
                 request.setAttribute("movie", movie);
@@ -68,7 +68,7 @@ public class MovieListServlet extends HttpServlet {
                 request.getRequestDispatcher("view/error.jsp").forward(request, response);
             }
         } else {
-            request.getRequestDispatcher("view/error.jsp").forward(request, response);
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Action không hợp lệ");
         }
     }
 
@@ -93,14 +93,21 @@ public class MovieListServlet extends HttpServlet {
         } else if (action.equals("updateMovie")) {
             Movie movie = new Movie();
             request.setAttribute("movie", movie);
+            movie.setId(Integer.parseInt(request.getParameter("id")));
+            movie.setTitle(request.getParameter("title"));
+            movie.setDirector(request.getParameter("director"));
+            movie.setGenre(request.getParameter("genre"));
+            movie.setDescription(request.getParameter("description"));
+            movie.setDuration(Integer.parseInt(request.getParameter("duration")));
+            movie.setLanguage(request.getParameter("language"));
             boolean isUpdate = movieDAO.updateMovie(movie);
             if (isUpdate) {
                 getAllMovies(request, response);
             } else {
-                request.getRequestDispatcher("view/error.jsp").forward(request, response);
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Action không hợp lệ");
             }
         } else {
-            request.getRequestDispatcher("view/error.jsp").forward(request, response);
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Action không hợp lệ");
         }
     }
 }

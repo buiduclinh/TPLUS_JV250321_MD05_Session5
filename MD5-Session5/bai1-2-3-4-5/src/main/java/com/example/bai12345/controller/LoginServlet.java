@@ -24,7 +24,6 @@ public class LoginServlet extends HttpServlet {
     public void getAllCustomers(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<Customer> customers = customerDAO.getAllCustomers();
         req.setAttribute("customers", customers);
-        req.getRequestDispatcher("view/login.jsp").forward(req, resp);
     }
 
     @Override
@@ -39,9 +38,11 @@ public class LoginServlet extends HttpServlet {
             Customer customer = customerDAO.findByUserNamePassword(req.getParameter("username"), req.getParameter("password"));
             if (customer != null) {
                 req.setAttribute("customer", customer);
-                req.getRequestDispatcher("view/listMovie.jsp").forward(req, resp);
+                // Redirect tới servlet hiển thị phim
+                resp.sendRedirect(req.getContextPath() + "/MovieListServlet?action=getAllMovies");
             } else {
-                req.getRequestDispatcher("view/error.jsp").forward(req, resp);
+                // xử lý các action khác hoặc trả về lỗi
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Action không hợp lệ");
             }
         }
     }
