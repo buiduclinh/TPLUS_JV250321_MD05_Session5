@@ -1,213 +1,156 @@
-CREATE DATABASE movie_management;
-USE movie_management;
+CREATE DATABASE md5_ss6;
+USE md5_ss6;
 
-CREATE TABLE customer
-(
-    id       INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(100),
-    password VARCHAR(100),
-    phone    VARCHAR(20),
-    address  VARCHAR(255),
-    gender   VARCHAR(100),
-    email    VARCHAR(100),
-    role     ENUM ('ADMIN','USER')
-);
-
-CREATE TABLE movie
+CREATE TABLE product
 (
     id          INT AUTO_INCREMENT PRIMARY KEY,
-    title       VARCHAR(100),
-    director    VARCHAR(100),
-    genre       VARCHAR(100),
+    productName VARCHAR(100),
+    price       DECIMAL(10, 2),
     description VARCHAR(100),
-    duration    INT,
-    language    VARCHAR(100)
+    image       VARCHAR(100)
 );
 
-CREATE TABLE screen_room
-(
-    id               INT AUTO_INCREMENT PRIMARY KEY,
-    screen_room_name VARCHAR(100),
-    total_seat       INT
-);
-
-CREATE TABLE schedule
-(
-    id              INT AUTO_INCREMENT PRIMARY KEY,
-    movie_id        INT,
-    show_time       DATE,
-    screen_room_id  INT,
-    available_seats INT,
-    format          VARCHAR(100)
-);
-
-ALTER TABLE schedule
-    ADD CONSTRAINT schedule_screen_room_id
-        FOREIGN KEY (screen_room_id)
-            REFERENCES screen_room (id)
-            ON DELETE CASCADE;
-
-ALTER TABLE schedule
-    ADD CONSTRAINT schedule_movie_id
-        FOREIGN KEY (movie_id)
-            REFERENCES movie (id)
-            ON DELETE CASCADE;
-
-CREATE TABLE ticket
-(
-    id          INT AUTO_INCREMENT PRIMARY KEY,
-    customer_id INT,
-    schedule_id INT,
-    seat_name   VARCHAR(100),
-    total_money DOUBLE,
-    created_at  DATE
-);
-
-ALTER TABLE ticket
-    ADD CONSTRAINT ticket_customer_id
-        FOREIGN KEY (customer_id)
-            REFERENCES customer (id)
-            ON DELETE CASCADE;
-
-ALTER TABLE ticket
-    ADD CONSTRAINT ticket_schedule_id
-        FOREIGN KEY (schedule_id)
-            REFERENCES schedule (id)
-            ON DELETE CASCADE;
-
--- hiển thị tất cả người dùng
+-- hiển thị sản phẩm
 DELIMITER $$
-CREATE PROCEDURE get_all_customer(
+CREATE PROCEDURE get_all_products()
+BEGIN
+    SELECT * FROM product;
+END
+$$ DELIMITER ;
+
+-- thêm mới sản phẩm
+DELIMITER $$
+CREATE PROCEDURE add_product(
+    IN in_new_product_name VARCHAR(100),
+    IN in_new_product_price DECIMAL(10, 2),
+    IN in_new_product_description VARCHAR(100),
+    IN in_new_product_image VARCHAR(100)
 )
 BEGIN
-    SELECT *
-    FROM customer;
-END $$
-DELIMITER ;
-
--- tìm kiếm người dùng
-DELIMITER $$
-CREATE PROCEDURE get_customer_by_id(
-    IN in_customer_id int
-)
-BEGIN
-    SELECT *
-    FROM customer
-    WHERE id = in_customer_id;
-END $$
-DELIMITER ;
-
-INSERT INTO customer(id, username, password, phone, address, gender, email, role)
-VALUES ('0', 'admin', '1', null, null, null, null, 'ADMIN');
-
--- tìm kiếm theo username và password
-DELIMITER $$
-CREATE PROCEDURE get_customer_by_username_and_password(
-    IN customer_username VARCHAR(100),
-    IN customer_password VARCHAR(100)
-)
-BEGIN
-    SELECT *
-    FROM customer
-    WHERE username = customer_username
-      AND password = customer_password;
-END $$
-DELIMITER ;
-
-
-
--- hiển thị toàn bộ phim
-DELIMITER $$
-CREATE PROCEDURE get_all_movies(
-)
-BEGIN
-    SELECT * FROM movie;
-END $$
-DELIMITER ;
-
-
--- tìm kiếm phim theo id
-DELIMITER $$
-CREATE PROCEDURE get_movie_by_id(
-    IN in_movie_id int
-)
-BEGIN
-    SELECT *
-    FROM movie
-    WHERE id = in_movie_id;
-END $$
-DELIMITER ;
-
-
--- tìm kiếm phim theo tiêu đề
-DELIMITER $$
-CREATE PROCEDURE get_movie_by_title(
-    IN in_movie_title VARCHAR(100)
-)
-BEGIN
-    SELECT *
-    FROM movie
-    WHERE title = in_movie_title;
-END $$
-DELIMITER ;
-
--- add new movie
-
-# title       VARCHAR(100),
-#     director    VARCHAR(100),
-#     genre       VARCHAR(100),
-#     description VARCHAR(100),
-#     duration    INT,
-#     language    VARCHAR(100)
-
-DELIMITER $$
-CREATE PROCEDURE add_movie(
-    IN in_movie_title VARCHAR(100),
-    IN in_movie_director VARCHAR(100),
-    IN in_movie_genre VARCHAR(100),
-    IN in_movie_description VARCHAR(100),
-    IN in_movie_duration INT,
-    IN in_movie_language VARCHAR(100)
-)
-BEGIN
-    INSERT INTO movie(title, director, genre, description, duration, language)
-    VALUES (in_movie_title, in_movie_director, in_movie_genre, in_movie_description, in_movie_duration,
-            in_movie_language);
+    INSERT INTO product(productName, price, description, image)
+    VALUES (in_new_product_name, in_new_product_price, in_new_product_description, in_new_product_image);
 END
 $$
 DELIMITER ;
 
--- update movie
+CREATE TABLE user
+(
+    id       INT AUTO_INCREMENT PRIMARY KEY,
+    name     VARCHAR(100),
+    age      INT,
+    birthday DATE,
+    email    VARCHAR(100),
+    phone    VARCHAR(20)
+);
+
+-- hiển thị tất cả người dùng
 DELIMITER $$
-CREATE PROCEDURE update_movie(
-    IN in_movie_id INT,
-    IN in_movie_title VARCHAR(100),
-    IN in_movie_director VARCHAR(100),
-    IN in_movie_genre VARCHAR(100),
-    IN in_movie_description VARCHAR(100),
-    IN in_movie_duration INT,
-    IN in_movie_language VARCHAR(100)
+CREATE PROCEDURE get_all_users()
+BEGIN
+    SELECT * FROM user;
+END
+$$ DELIMITER ;
+
+-- thêm mới người dùng
+DELIMITER $$
+CREATE PROCEDURE add_user(
+    IN in_user_name VARCHAR(100),
+    IN in_user_age INT,
+    IN in_user_birthday DATE,
+    IN in_user_email VARCHAR(100),
+    IN in_user_phone VARCHAR(20)
 )
 BEGIN
-    UPDATE movie
-    SET title       = in_movie_title,
-        director    = in_movie_director,
-        genre       = in_movie_genre,
-        description = in_movie_description,
-        duration    = in_movie_duration,
-        language    = in_movie_language
-    WHERE id = in_movie_id;
+    INSERT INTO user(name, age, birthday, email, phone)
+    VALUES (in_user_name, in_user_age, in_user_birthday, in_user_email, in_user_phone);
 END $$
 DELIMITER ;
 
--- delete movie
+
+-- lấy số điện thoại người dùng
+
+
+-- lấy email người dùng
+
+
+CREATE TABLE employee
+(
+    id       INT AUTO_INCREMENT PRIMARY KEY,
+    name     VARCHAR(100),
+    email    VARCHAR(100),
+    position VARCHAR(100)
+);
+
+-- lấy danh sách nhân viên
 DELIMITER $$
-CREATE PROCEDURE delete_movie(
-    IN in_movie_id INT
+CREATE PROCEDURE get_all_employee()
+BEGIN
+    SELECT * FROM employee;
+END
+$$ DELIMITER ;
+
+-- thêm mới nhân viên
+DELIMITER $$
+CREATE PROCEDURE add_employee(
+    IN in_employee_name VARCHAR(100),
+    IN in_employee_email VARCHAR(100),
+    IN in_employee_position VARCHAR(100)
 )
 BEGIN
-    DELETE
-    FROM movie
-    WHERE id = in_movie_id;
-end $$
+    INSERT INTO employee(name, email, position)
+    VALUES (in_employee_name, in_employee_email, in_employee_position);
+END
+$$
 DELIMITER ;
+
+CREATE TABLE question
+(
+    id       INT AUTO_INCREMENT PRIMARY KEY,
+    imageUrl VARCHAR(100),
+    answer   VARCHAR(100)
+);
+
+-- lấy ngẫu nhiên câu hỏi
+DELIMITER $$
+
+CREATE PROCEDURE get_random_question_id(OUT random_id INT)
+BEGIN
+    SELECT id
+    INTO random_id
+    FROM question
+    ORDER BY RAND()
+    LIMIT 1;
+END$$
+
+DELIMITER ;
+
+-- thêm mới câu hỏi
+DELIMITER $$
+CREATE PROCEDURE add_question(
+    IN in_question_imageUrl VARCHAR(100),
+    IN in_question_answer VARCHAR(100)
+)
+BEGIN
+    INSERT INTO question(imageUrl, answer)
+    VALUES (in_question_imageUrl, in_question_answer);
+END
+$$
+DELIMITER ;
+
+
+CREATE TABLE seed
+(
+    id        INT AUTO_INCREMENT PRIMARY KEY,
+    seedsName VARCHAR(100),
+    price     DECIMAL(10, 2),
+    imageUrl  VARCHAR(100)
+);
+
+CREATE TABLE user_player
+(
+    id       INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(100),
+    password VARCHAR(100),
+    email    VARCHAR(100),
+    balance  DECIMAL(10, 2)
+);
