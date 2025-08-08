@@ -8,11 +8,16 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
+
+@Controller
+@RequestMapping(value ={"/","/LoginServlet"})
 @WebServlet(urlPatterns = "/LoginServlet")
 public class LoginServlet extends HttpServlet {
     CustomerDAO customerDAO;

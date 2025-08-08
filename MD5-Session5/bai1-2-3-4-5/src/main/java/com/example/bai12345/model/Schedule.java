@@ -14,8 +14,9 @@ import java.time.LocalDate;
 public class Schedule {
     private int id;
     private int movieId;
-    private  LocalDate showTime;
-    private  int screenRoomId;
+    private String movieTitle;
+    private LocalDate showTime;
+    private int screenRoomId;
     private int availableSeats;
-    private  String format;
+    private String format;
 }
